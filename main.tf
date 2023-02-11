@@ -1,5 +1,5 @@
 locals {
-  enabled                = module.this.enabled
+  enabled                = module.context.enabled
   security_group_enabled = local.enabled && var.create_security_group
 
   dns_name = format("%s.efs.%s.amazonaws.com", join("", aws_efs_file_system.default.*.id), var.region)
@@ -18,7 +18,7 @@ locals {
 resource "aws_efs_file_system" "default" {
   #bridgecrew:skip=BC_AWS_GENERAL_48: BC complains about not having an AWS Backup plan. We ignore this because this can be done outside of this module.
   count                           = local.enabled ? 1 : 0
-  tags                            = module.this.tags
+  tags                            = module.context.tags
   availability_zone_name          = var.availability_zone_name
   encrypted                       = var.encrypted
   kms_key_id                      = var.kms_key_id
@@ -83,7 +83,7 @@ resource "aws_efs_access_point" "default" {
     }
   }
 
-  tags = module.this.tags
+  tags = module.context.tags
 }
 
 module "security_group" {
@@ -117,7 +117,7 @@ module "security_group" {
   ]
   vpc_id = var.vpc_id
 
-  context = module.this.context
+  context = module.context.legacy
 }
 
 module "dns" {
@@ -125,16 +125,16 @@ module "dns" {
   version = "0.12.2"
 
   enabled  = local.enabled && length(var.zone_id) > 0
-  dns_name = var.dns_name == "" ? module.this.id : var.dns_name
+  dns_name = var.dns_name == "" ? module.context.id : var.dns_name
   ttl      = 60
   zone_id  = try(var.zone_id[0], null)
   records  = [local.dns_name]
 
-  context = module.this.context
+  context = module.context.legacy
 }
 
 resource "aws_efs_backup_policy" "policy" {
-  count = module.this.enabled ? 1 : 0
+  count = module.context.enabled ? 1 : 0
 
   file_system_id = join("", aws_efs_file_system.default.*.id)
 

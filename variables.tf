@@ -23,11 +23,6 @@ variable "vpc_id" {
   description = "VPC ID"
 }
 
-variable "region" {
-  type        = string
-  description = "AWS Region"
-}
-
 variable "subnets" {
   type        = list(string)
   description = "Subnet IDs"
