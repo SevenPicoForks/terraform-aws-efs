@@ -117,7 +117,7 @@ module "security_group" {
   ]
   vpc_id = var.vpc_id
 
-  context = module.context.legacy
+  context = module.context.self
 }
 
 module "dns" {
