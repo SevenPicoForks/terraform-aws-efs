@@ -87,8 +87,9 @@ resource "aws_efs_access_point" "default" {
 }
 
 module "security_group" {
-  source  = "cloudposse/security-group/aws"
-  version = "1.0.1"
+  source  = "registry.terraform.io/SevenPicoForks/security-group/aws"
+  version = "3.0.0"
+  context = module.context.self
 
   enabled                       = local.security_group_enabled
   security_group_name           = var.security_group_name
@@ -97,6 +98,7 @@ module "security_group" {
   security_group_delete_timeout = var.security_group_delete_timeout
 
   security_group_description = var.security_group_description
+  vpc_id                     = var.vpc_id
   allow_all_egress           = true
   rules                      = var.additional_security_group_rules
   rule_matrix = [
@@ -115,9 +117,6 @@ module "security_group" {
       ]
     }
   ]
-  vpc_id = var.vpc_id
-
-  context = module.context.legacy
 }
 
 module "dns" {
