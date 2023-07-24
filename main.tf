@@ -86,40 +86,6 @@ resource "aws_efs_access_point" "default" {
   tags = module.context.tags
 }
 
-#module "security_group" {
-#  source  = "cloudposse/security-group/aws"
-#  version = "1.0.1"
-#
-#  enabled                       = local.security_group_enabled
-#  security_group_name           = var.security_group_name
-#  create_before_destroy         = var.security_group_create_before_destroy
-#  security_group_create_timeout = var.security_group_create_timeout
-#  security_group_delete_timeout = var.security_group_delete_timeout
-#
-#  security_group_description = var.security_group_description
-#  allow_all_egress           = true
-#  rules                      = var.additional_security_group_rules
-#  rule_matrix = [
-#    {
-#      source_security_group_ids = local.allowed_security_group_ids
-#      cidr_blocks               = var.allowed_cidr_blocks
-#      rules = [
-#        {
-#          key         = "in"
-#          type        = "ingress"
-#          from_port   = 2049
-#          to_port     = 2049
-#          protocol    = "tcp"
-#          description = "Allow ingress EFS traffic"
-#        }
-#      ]
-#    }
-#  ]
-#  vpc_id = var.vpc_id
-#
-#  context = module.context.self
-#}
-
 module "security_group" {
   source  = "registry.terraform.io/SevenPicoForks/security-group/aws"
   version = "3.0.0"
