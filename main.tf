@@ -2,7 +2,6 @@ locals {
   enabled                = module.context.enabled
   security_group_enabled = local.enabled && var.create_security_group
 
-  dns_name = format("%s.efs.%s.amazonaws.com", join("", aws_efs_file_system.default.*.id), var.region)
   # Returning null in the lookup function gives type errors and is not omitting the parameter.
   # This work around ensures null is returned.
   posix_users = {

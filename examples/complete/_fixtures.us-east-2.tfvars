@@ -9,3 +9,5 @@ namespace = "eg"
 stage = "test"
 
 name = "efs-test"
+
+zone_id = ""
