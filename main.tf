@@ -119,8 +119,8 @@ module "security_group" {
 }
 
 resource "aws_route53_record" "efs" {
-  count   = module.context.enabled ? 1 : 0
-  zone_id = try(var.zone_id[0], null)
+  count   = module.context.enabled && length(var.zone_id) > 0 ? 1 : 0
+  zone_id = try(var.zone_id[count.index], null)
   type    = "CNAME"
   name    = module.context.dns_name
   records = [try(aws_efs_file_system.default[*].dns_name, "")]
