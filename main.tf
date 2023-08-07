@@ -123,7 +123,7 @@ resource "aws_route53_record" "efs" {
   zone_id = try(var.zone_id[count.index], null)
   type    = "CNAME"
   name    = module.context.dns_name
-  records = [aws_efs_file_system.default[*].dns_name]
+  records = [aws_efs_file_system.default[0].dns_name]
   ttl     = 300
 }
 
