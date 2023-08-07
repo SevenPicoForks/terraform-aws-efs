@@ -10,4 +10,4 @@ stage = "test"
 
 name = "efs-test"
 
-zone_id = ""
+zone_id = []

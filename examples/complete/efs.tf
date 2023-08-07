@@ -2,12 +2,12 @@
 # EFS
 # ------------------------------------------------------------------------------
 module "efs" {
-  source = "../../"
+  source  = "../../"
+  context = module.context.self
 
   region  = var.region
   vpc_id  = module.vpc.vpc_id
   subnets = module.subnets.private_subnet_ids
-
   access_points = {
     "data" = {
       posix_user = {
@@ -46,10 +46,7 @@ module "efs" {
       description              = "Allow ingress traffic to EFS from trusted Security Groups"
     }
   ]
-
-  transition_to_ia = ["AFTER_7_DAYS"]
-
+  transition_to_ia                     = ["AFTER_7_DAYS"]
   security_group_create_before_destroy = false
-
-  context = module.context.self
+  zone_id                              = var.zone_id
 }

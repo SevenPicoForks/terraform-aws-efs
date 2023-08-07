@@ -16,3 +16,7 @@ variable "security_group_suffix" {
   A suffix of `efs` was used in versions 0.30.1 and earlier.
   EOT
 }
+
+variable "zone_id" {
+  default = []
+}
