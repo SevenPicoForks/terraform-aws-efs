@@ -1,7 +1,3 @@
-variable "region" {
-  type = string
-}
-
 variable "availability_zones" {
   type        = list(string)
   description = "List of Availability Zones where subnets will be created"

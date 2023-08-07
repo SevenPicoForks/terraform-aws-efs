@@ -119,17 +119,13 @@ module "security_group" {
   ]
 }
 
-module "dns" {
-  source  = "cloudposse/route53-cluster-hostname/aws"
-  version = "0.12.2"
-
-  enabled  = local.enabled && length(var.zone_id) > 0
-  dns_name = var.dns_name == "" ? module.context.id : var.dns_name
-  ttl      = 60
-  zone_id  = try(var.zone_id[0], null)
-  records  = [local.dns_name]
-
-  context = module.context.legacy
+resource "aws_route53_record" "efs" {
+  count   = module.context.enabled ? 1 : 0
+  zone_id = try(var.zone_id[0], null)
+  type    = "CNAME"
+  name    = module.context.dns_name
+  records = [try(aws_efs_file_system.default[*].dns_name, "")]
+  ttl     = 300
 }
 
 resource "aws_efs_backup_policy" "policy" {
