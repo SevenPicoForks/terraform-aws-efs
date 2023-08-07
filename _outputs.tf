@@ -19,12 +19,12 @@ output "id" {
 }
 
 output "host" {
-  value       = module.dns.hostname
+  value       = try(aws_route53_record.efs[0].name, "")
   description = "Route53 DNS hostname for the EFS"
 }
 
 output "dns_name" {
-  value       = local.enabled ? local.dns_name : null
+  value       = local.enabled ? module.context.dns_name : null
   description = "EFS DNS name"
 }
 

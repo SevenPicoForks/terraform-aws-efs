@@ -2,7 +2,6 @@ locals {
   enabled                = module.context.enabled
   security_group_enabled = local.enabled && var.create_security_group
 
-  dns_name = format("%s.efs.%s.amazonaws.com", join("", aws_efs_file_system.default.*.id), var.region)
   # Returning null in the lookup function gives type errors and is not omitting the parameter.
   # This work around ensures null is returned.
   posix_users = {
@@ -119,17 +118,13 @@ module "security_group" {
   ]
 }
 
-module "dns" {
-  source  = "cloudposse/route53-cluster-hostname/aws"
-  version = "0.12.2"
-
-  enabled  = local.enabled && length(var.zone_id) > 0
-  dns_name = var.dns_name == "" ? module.context.id : var.dns_name
-  ttl      = 60
-  zone_id  = try(var.zone_id[0], null)
-  records  = [local.dns_name]
-
-  context = module.context.legacy
+resource "aws_route53_record" "efs" {
+  count   = module.context.enabled && length(var.zone_id) > 0 ? 1 : 0
+  zone_id = try(var.zone_id[count.index], null)
+  type    = "CNAME"
+  name    = module.context.dns_name
+  records = [aws_efs_file_system.default[0].dns_name]
+  ttl     = 300
 }
 
 resource "aws_efs_backup_policy" "policy" {

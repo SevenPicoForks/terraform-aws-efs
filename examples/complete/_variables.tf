@@ -1,7 +1,3 @@
-variable "region" {
-  type = string
-}
-
 variable "availability_zones" {
   type        = list(string)
   description = "List of Availability Zones where subnets will be created"
@@ -19,4 +15,8 @@ variable "security_group_suffix" {
   DEPRECATED: Use the module's attributes instead.
   A suffix of `efs` was used in versions 0.30.1 and earlier.
   EOT
+}
+
+variable "zone_id" {
+  default = []
 }
